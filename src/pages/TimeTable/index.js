@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
+import Loader from '../../components/global/Loader'
 
 
 export default function TimeTable() {
@@ -16,6 +17,9 @@ export default function TimeTable() {
 
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
+
+  // loader
+  const [spinner, setSpinner] = useState(false);
 
   // overlay
   const [overlayOpen, setOverlayOpen] = useState(false)
@@ -74,13 +78,15 @@ export default function TimeTable() {
 
 
 
-  // calling acal_show api 
+  // calling time_table_show api 
   const [viewTimeTable, setViewTimeTable] = useState([]);
   
   useEffect(() => {
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/time_table_show_all.php").then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewTimeTable(data.data);
+      setSpinner(false);
     });
   }, [dataAdded]);
 
@@ -405,7 +411,7 @@ export default function TimeTable() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                {!spinner?<tbody className="divide-y divide-gray-200 bg-white">
                 {viewTimeTable?viewTimeTable.map((tt, idx) => {
                   return (
                     <tr key={tt.t_id}>
@@ -439,7 +445,7 @@ export default function TimeTable() {
                     </tr>
                   );
                 }):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={8}><Loader/></td></tr>}
               </table>
             </div>
           </div>

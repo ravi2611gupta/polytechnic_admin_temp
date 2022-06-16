@@ -6,6 +6,7 @@ import AddWorkShop from '../../components/global/AddWorkShop'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
+import Loader from '../../components/global/Loader';
 
 
 const people = [
@@ -20,6 +21,9 @@ export default function Result() {
 
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
+
+  // loader
+  const [spinner, setSpinner] = useState(false);
 
   // overlay
   const [overlayOpen, setOverlayOpen] = useState(false)
@@ -66,9 +70,11 @@ export default function Result() {
   const [viewResult, setViewResult] = useState([])
 
   useEffect(() => {
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/result_show_all.php").then((data)=>{
       console.log("result fetch api : ", data)
       setViewResult(data.data)
+      setSpinner(false);
     })
   }, [dataAdded])
 
@@ -306,7 +312,7 @@ export default function Result() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+               {!spinner? <tbody className="divide-y divide-gray-200 bg-white">
                   {viewResult?viewResult.map((result, idx) => (
                     <tr key={result.res_id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -328,7 +334,7 @@ export default function Result() {
                       </td>
                     </tr>
                   )):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={5}><Loader/></td></tr>}
               </table>
             </div>
           </div>

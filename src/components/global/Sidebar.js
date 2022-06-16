@@ -36,6 +36,8 @@ const navigation = [
     { name: "MOU", href: "/mou", icon: DocumentAddIcon, current: false },
     { name: "Add Teacher", href: "/teacheradd", icon: UserAddIcon, current: false },
     { name: "View Teacher", href: "/teacherview", icon: UserIcon, current: false },
+    { name: "Committee", href: "/committee", icon: UserIcon, current: false },
+    { name: "Committee Member", href: "/committeemem", icon: UserIcon, current: false },
     { name: "Slider", href: "/slider", icon: PhotographIcon, current: false },
     { name: "Gallery", href: "/gallery", icon: PhotographIcon, current: false },
     { name: "Academic Calendar", href: "/acal", icon: CalendarIcon, current: false },

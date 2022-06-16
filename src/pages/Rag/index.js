@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import AddWorkShop from '../../components/global/AddWorkShop'
+import Loader from '../../components/global/Loader';
 
 
 export default function ViewRag() {
@@ -11,12 +12,17 @@ export default function ViewRag() {
   // for reloading the table
   const [dataAdded,setDataAdded] = useState(false);
 
+  // loader
+  const [spinner, setSpinner] = useState(false);
+
 
   const [viewRag, setViewRag] = useState([])
   useEffect(()=>{
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/rag_show.php").then((data)=>{
       console.log("Fetching Anti Ragging Data : ",data)
       setViewRag(data.data)
+      setSpinner(false);
     })
   }, [dataAdded])
 
@@ -133,7 +139,7 @@ export default function ViewRag() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                {!spinner? <tbody className="divide-y divide-gray-200 bg-white">
                   {viewRag?viewRag.map((rag, idx) => (
                     <tr key={rag.stu_email}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -164,7 +170,7 @@ export default function ViewRag() {
                       </td>
                     </tr>
                   )):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={15}><Loader/></td></tr>}
               </table>
             </div>
           </div>

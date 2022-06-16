@@ -3,9 +3,10 @@ import axios from 'axios'
 import React, {Fragment, useEffect, useState } from 'react'
 import AddWorkShop from '../../components/global/AddWorkShop'
 
-import { XIcon } from '@heroicons/react/outline'
+import { ShoppingBagIcon, XIcon } from '@heroicons/react/outline'
 
 import toast from 'react-hot-toast'
+import Loader from '../../components/global/Loader'
 
 
 export default function Workshops() {
@@ -15,6 +16,9 @@ export default function Workshops() {
   
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
+
+  // loader
+  const [spinner, setSpinner] = useState(false);
 
   // overlay
   const [overlayOpen, setOverlayOpen] = useState(false)
@@ -70,10 +74,11 @@ export default function Workshops() {
   const [viewAicte, setViewAicte] = useState([]);
   
   useEffect(() => {
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/aicte_show.php").then((data) => {
       console.log("Incoming data from aicte req:", data);
       setViewAicte(data.data);
-      
+      setSpinner(false);
     });
   }, [dataAdded]);
 
@@ -363,7 +368,7 @@ export default function Workshops() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                {!spinner?<tbody className="divide-y divide-gray-200 bg-white">
                 {viewAicte?viewAicte.map((aicte, idx) => {
                   return (
                     <tr key={aicte.doc_id}>
@@ -386,7 +391,7 @@ export default function Workshops() {
                     </tr>
                   );
                 }):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={6}><Loader/></td></tr>}
               </table>
             </div>
           </div>

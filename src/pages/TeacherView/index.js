@@ -6,6 +6,7 @@ import AddWorkShop from '../../components/global/AddWorkShop'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
+import Loader from '../../components/global/Loader';
 
 
 export default function ViewTeacher() {
@@ -15,15 +16,20 @@ export default function ViewTeacher() {
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
 
+  // loader
+  const [spinner, setSpinner] = useState(false);
+
   // overlay
   const [overlayOpen, setOverlayOpen] = useState(false)
 
 
   const [viewTeacher, setViewTeacher] = useState([])
   useEffect(()=>{
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/teacher_show.php").then((data)=>{
       console.log("Fetching Teacher Data : ",data)
       setViewTeacher(data.data)
+      setSpinner(false);
     })
   }, [dataAdded])
 
@@ -34,7 +40,6 @@ export default function ViewTeacher() {
   
   // fetching department 
   const [viewBranch, setViewBranch] = useState([]);
-  
   useEffect(() => {
     axios.get("http://localhost/mohammadi_api/branch_show.php").then((data) => {
       console.log("Incoming data from branch req:", data);
@@ -225,7 +230,7 @@ export default function ViewTeacher() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                {!spinner?<tbody className="divide-y divide-gray-200 bg-white">
                   {viewTeacher?viewTeacher.map((teacher, idx) => (
                     <tr key={teacher.email}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -256,7 +261,7 @@ export default function ViewTeacher() {
                       </td>
                     </tr>
                   )):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={15}><Loader/></td></tr>}
               </table>
             </div>
           </div>

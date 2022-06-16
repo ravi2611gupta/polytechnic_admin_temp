@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import AddWorkShop from '../../components/global/AddWorkShop'
+import Loader from '../../components/global/Loader';
 
 
 export default function ViewGrievance() {
@@ -11,12 +12,17 @@ export default function ViewGrievance() {
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
 
+  // loader
+  const [spinner, setSpinner] = useState(false);
+
 
   const [viewGrievance, setViewGrievance] = useState([])
   useEffect(()=>{
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/grievance_show.php").then((data)=>{
       console.log("Fetching griv Data : ",data)
       setViewGrievance(data.data)
+      setSpinner(false);
     })
   }, [dataAdded])
 
@@ -128,7 +134,7 @@ export default function ViewGrievance() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+              {!spinner?  <tbody className="divide-y divide-gray-200 bg-white">
                   {viewGrievance?viewGrievance.map((griv, idx) => (
                     <tr key={griv.g_id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -154,7 +160,7 @@ export default function ViewGrievance() {
                       </td>
                     </tr>
                   )):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={10}><Loader/></td></tr>}
               </table>
             </div>
           </div>

@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 import React, { Fragment, useEffect, useState } from 'react'
 import AddWorkShop from '../../components/global/AddWorkShop'
@@ -5,11 +6,12 @@ import AddWorkShop from '../../components/global/AddWorkShop'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 
+
 import toast from 'react-hot-toast'
 import Loader from '../../components/global/Loader'
 
 
-export default function Mou() {
+export default function VideoLecture() {
 
  
   let [isOpen, setIsOpen] = useState(false)
@@ -24,17 +26,12 @@ export default function Mou() {
   const [overlayOpen, setOverlayOpen] = useState(false)
   
   
-  const [mouFormData, setMouFormData] = useState({
-    title:"",
-    company:"",
-    file:"",
+  const [committeeMemData, setCommitteeMemData] = useState({
+    name:"",
+    designation:"",
+    cc_id:"",
   })
 
-
-  
-  const handleFile = (e)=>{
-    setMouFormData({ ...mouFormData, file: e.target.files[0] });
-  }
 
   const handleSubmit = (e)=>{
     e.preventDefault();
@@ -45,23 +42,24 @@ export default function Mou() {
   // calling api for form submit
   const formSave = async()=>{
 
-    if(mouFormData.title === "" || mouFormData.company === "" || mouFormData.file === ""){
+    if(committeeMemData.name === "" || committeeMemData.designation === "" || committeeMemData.cc_id===""){
       toast.error("All fields are required")
     }else{
+      console.log(committeeMemData);
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/mou_add.php",
-       data: mouFormData,
+       url:"http://localhost/mohammadi_api/committee_mem_add.php",
+       data: committeeMemData,
        headers: { "Content-Type": "multipart/form-data"}
       })
 
-      console.log("Gallery Add : ",res)
+      console.log("Committee Member Add : ",res)
       toast.success(res.data.message)
       setDataAdded(!dataAdded)
-      mouFormData.title=''
-      mouFormData.company=''
-      mouFormData.file=''
+      committeeMemData.name=''
+      committeeMemData.designation=''
+      committeeMemData.cc_id=''
       document.getElementById("my-form").reset()
           
 
@@ -73,16 +71,14 @@ export default function Mou() {
   
 
 
-
-
-  // calling acal_show api 
-  const [viewMou, setViewMou] = useState([]);
+  // fetching branches
+  const [viewCommittee, setViewCommittee] = useState([]);
   
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/mou_show.php").then((data) => {
-      console.log("Incoming data from gallery req:", data);
-      setViewMou(data.data);
+    axios.get("http://localhost/mohammadi_api/committee_show.php").then((data) => {
+      console.log("Incoming data from committee req:", data);
+      setViewCommittee(data.data);
       setSpinner(false);
     });
   }, [dataAdded]);
@@ -91,19 +87,31 @@ export default function Mou() {
 
 
 
+  // calling committee member api 
+  const [viewCommitteeMem, setViewCommitteeMem] = useState([]);
+  
+  useEffect(() => {
+    axios.get("http://localhost/mohammadi_api/committee_mem_show.php").then((data) => {
+      console.log("Incoming data from gallery req:", data);
+      setViewCommitteeMem(data.data);
+    });
+  }, [dataAdded]);
+
 
   
+
   
+
   // Deleting data
-  const confirmDelete = async (mou_id) => {
+  const confirmDelete = async (com_id) => {
     if(window.confirm("Are you sure you want to delete?")){
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/mou_del.php",
-          data:mou_id
+          url:"http://localhost/mohammadi_api/committee_mem_del.php",
+          data:com_id
         })
-        console.log("MOU delete response : ", res)
+        console.log("Committee Member delete response : ", res)
         toast.success(res.data.message)
         setDataAdded(!dataAdded)
       }catch(error){
@@ -119,30 +127,22 @@ export default function Mou() {
 
 
 
+  // updating Data
 
-  
-
-  
-
-  // editing data
   const [updateFormData, setUpdateFormData] = useState({
-    doc_id:"",
-    title:"",
-    company:"", 
-    file:"",
+    mem_id:"",
+    name:"",
+    designation:"",
+    cc_id:"",
   })
 
-  
-  const handleUpdateFile = (e)=>{
-    setUpdateFormData({ ...updateFormData, file: e.target.files[0] });
-  }
-  
 
-  const editMou = (mou)=>{
+  const editNotification = (commem)=>{
     setOverlayOpen(true)
-    setUpdateFormData({...updateFormData, doc_id:mou.doc_id, title:mou.title, company:mou.company})
+    setUpdateFormData({...updateFormData, mem_id:commem.mem_id, name:commem.mem_name, designation:commem.mem_deg, cc_id:commem.committee_id})
     // setUpdateFormData({...updateFormData, title:notification.notice})
-    // console.log("AICTE Edit Request : ",notification)
+
+    console.log("Committee Member Edit Request : ", commem)
   }
 
   const handleUpdate = (e)=>{
@@ -153,23 +153,21 @@ export default function Mou() {
 
   const updateFormSave = async ()=>{
 
-    if(updateFormData.title === "" || updateFormData.company === ""){
-      toast("Title and Company are required")
+    if(updateFormData.mem_id === "" ||  updateFormData.name==="" || updateFormData.designation==="" || updateFormData.cc_id===""){
+      toast("All fields are required")
     }else{
-      console.log(updateFormData)
+      console.log("Data to be send for updation : ", updateFormData)
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/mou_update.php",
-          data: updateFormData,
-          headers: { "Content-Type": "multipart/form-data"},
+          url: "http://localhost/mohammadi_api/committee_mem_update.php",
+          data: updateFormData
           });
 
-          console.log(res)
+          console.log("Response from update query : ", res)
           toast.success(res.data.message)
           setDataAdded(!dataAdded)
           updateFormData.title = ""
-          updateFormData.company = ""
           document.getElementById("my-update-form").reset()
           setOverlayOpen(false)
         } catch (error) {
@@ -177,14 +175,13 @@ export default function Mou() {
         }
     }
   
-
   }
 
 
 
 
 
-  
+
 
 
  return (
@@ -196,7 +193,7 @@ export default function Mou() {
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">MOU</h1>        
+          <h1 className="text-xl font-semibold text-gray-900">Committee Member</h1>        
         </div>
       </div>
 
@@ -211,37 +208,51 @@ export default function Mou() {
         <div className="shadow sm:rounded-md sm:overflow-hidden">
           <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
             <div className="grid grid-cols-2 gap-6">
+
             <div className="col-span-2 sm:col-span-1">
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700"> Title </label>
+                <label htmlFor="cc_id" className="block text-sm font-medium text-gray-700"> Department </label>
                 <div className="mt-1 flex rounded-md shadow-sm">
-                  <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> Text1 </span>
-                  <input type="text" value={mouFormData.title} onChange={(e)=>{ setMouFormData({...mouFormData, title:e.target.value}) }} name="title" id="title" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Title"/>
+                  <select value={committeeMemData.cc_id} onChange={(e)=>{ setCommitteeMemData({...committeeMemData, cc_id:e.target.value}) }} name="cc_id" id="cc_id" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300">
+                    <option value="" defaultChecked disabled>Select Committee</option>
+
+                    {/* department fetching form database */}
+                    {viewCommittee?viewCommittee.map((committee)=>{
+                      return(
+                        <option value={committee.cc_id}>{committee.committee_name}</option>
+                      )
+                    }):""}
+
+                    </select>
+                </div>
+              </div>
+
+            <div className="col-span-2 sm:col-span-1">
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700"> Name </label>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> Title </span>
+                  <input type="text" value={committeeMemData.name} onChange={(e)=>{ setCommitteeMemData({...committeeMemData, name:e.target.value}) }} name="name" id="name" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Member Name"/>
                 </div>
               </div>
          
-            <div className="col-span-2 sm:col-span-1">
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700"> Company </label>
+            
+
+          
+              <div className="col-span-2 sm:col-span-2">
+                <label htmlFor="designation" className="block text-sm font-medium text-gray-700"> Designation </label>
                 <div className="mt-1 flex rounded-md shadow-sm">
-                  <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> Company </span>
-                  <input type="text" value={mouFormData.company} onChange={(e)=>{ setMouFormData({...mouFormData, company:e.target.value}) }} name="company" id="company" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Company Name"/>
+                  <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> Designation </span>
+                  <input type="text" value={committeeMemData.designation} onChange={(e)=>{ setCommitteeMemData({...committeeMemData, designation:e.target.value}) }} name="designation" id="designation" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Designation"/>
                 </div>
               </div>
 
-
-
-              <div className="col-span-2 sm:col-span-1">
-                <label htmlFor="file" className="block text-sm font-medium text-gray-700"> Select File </label>
-                <div className="mt-1 flex rounded-md shadow-sm">
-                  <input type="file" name="file" onChange={handleFile} id="file" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"/>
-                </div>
-              
-              </div>
+            
+         
            
             </div>
           
           </div>
           <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <button type="submit" onClick={handleSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add MOU</button>
+            <button type="submit" onClick={handleSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add Committee Member</button>
           </div>
         </div>
       </form>
@@ -257,12 +268,7 @@ export default function Mou() {
 
 
 
-
-
-
-
-
-
+        
     {/* side overlay start */}
     <Transition.Root show={overlayOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOverlayOpen}>
@@ -284,7 +290,7 @@ export default function Mou() {
                   <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-lg font-medium text-gray-900"> Update MOU </Dialog.Title>
+                        <Dialog.Title className="text-lg font-medium text-gray-900"> Update Committee Member </Dialog.Title>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
@@ -305,34 +311,47 @@ export default function Mou() {
                             <div className="shadow sm:rounded-md sm:overflow-hidden">
                               <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
                                 <div className="grid grid-cols-1 gap-6">
-                                  <input type="hidden" name="file_id" value={updateFormData.doc_id}/>
-                                <div className="col-span-1 sm:col-span-1">
-                                    <label htmlFor="company-website" className="block text-sm font-medium text-gray-700"> Title </label>
-                                    <div className="mt-1 flex rounded-md shadow-sm">
-                                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> Title </span>
-                                      <input type="text" value={updateFormData.title} onChange={(e)=>{ setUpdateFormData({...updateFormData, title:e.target.value}) }}  name="title" id="company-website" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Your Title"/>
-                                    </div>
-                                  </div>
-                                <div className="col-span-1 sm:col-span-1">
-                                    <label htmlFor="company-website" className="block text-sm font-medium text-gray-700"> Company </label>
-                                    <div className="mt-1 flex rounded-md shadow-sm">
-                                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> company </span>
-                                      <input type="text" value={updateFormData.company} onChange={(e)=>{ setUpdateFormData({...updateFormData, company:e.target.value}) }}  name="company" id="company-website" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Company Name"/>
-                                    </div>
-                                  </div>
+                                  <input type="hidden" name="mem_id" value={updateFormData.mem_id}/>
+
                                   <div className="col-span-1 sm:col-span-1">
-                                    <label htmlFor="company-website" className="block text-sm font-medium text-gray-700"> File </label>
+                                    <label htmlFor="company-website" className="block text-sm font-medium text-gray-700"> Committee </label>
+                                    <select value={updateFormData.cc_id} onChange={(e)=>{ setUpdateFormData({...updateFormData, cc_id:e.target.value}) }} name="cc_id" id="cc_id" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300">
+                                    <option value="" disabled>Select Committee</option>
+
+                                    {/* department fetching form database */}
+                                    {viewCommittee?viewCommittee.map((committee)=>{
+                                      return(
+                                        <option value={committee.cc_id}>{committee.committee_name}</option>
+                                      )
+                                    }):""}
+
+                                    </select>
+                                  </div>
+
+                                <div className="col-span-1 sm:col-span-1">
+                                    <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">Member Name </label>
                                     <div className="mt-1 flex rounded-md shadow-sm">
-                                      <input type="file" name="file" onChange={handleUpdateFile} id="company-website" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"/>
-                                    
+                                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> Name </span>
+                                      <input type="text" value={updateFormData.name} onChange={(e)=>{ setUpdateFormData({...updateFormData, name:e.target.value}) }}  name="name" id="company-website" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Member Name"/>
                                     </div>
                                   </div>
                               
+                          
+                              
+                                <div className="col-span-1 sm:col-span-1">
+                                    <label htmlFor="company-website" className="block text-sm font-medium text-gray-700"> Designation </label>
+                                    <div className="mt-1 flex rounded-md shadow-sm">
+                                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> Designation </span>
+                                      <input type="text" value={updateFormData.designation} onChange={(e)=>{ setUpdateFormData({...updateFormData, designation:e.target.value}) }}  name="designation" id="company-website" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Designation"/>
+                                    </div>
+                                  </div>
+
+                             
                                 </div>
                               
                               </div>
                               <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                <button type="submit" onClick={handleUpdate} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update MOU</button>
+                                <button type="submit" onClick={handleUpdate} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update Committee Member</button>
                               </div>
                             </div>
                           </form>
@@ -370,19 +389,18 @@ export default function Mou() {
                       S.No.
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Title
+                      Committee Name
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Company
+                      Member Name
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      File
+                      Designation
                     </th>
-                  
+                
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Post Date &amp; Time
                     </th>
-
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Edit
                     </th>
@@ -394,35 +412,36 @@ export default function Mou() {
                    
                   </tr>
                 </thead>
-               {!spinner? <tbody className="divide-y divide-gray-200 bg-white">
-                {viewMou?viewMou.map((mou, idx) => {
+                {!spinner?<tbody className="divide-y divide-gray-200 bg-white">
+                {viewCommitteeMem?viewCommitteeMem.map((commem, idx) => {
                   return (
-                    <tr key={mou.doc_id}>
+                    <tr key={commem.mem_id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                         {idx+1}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {mou.title}
+                        {commem.committee_name}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {mou.company}
+                        {commem.mem_name}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        <a href={`http://localhost/mohammadi_api/files/mou/${mou.file}`} className="text-indigo-600" target="_blank">Click here to view</a>
+                        {commem.mem_deg}
                       </td>
-                     
+                    
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {mou.date}
+                        {commem.mem_addedon}
                       </td>
 
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
-                    <a  href="#" className="text-indigo-600 hover:text-indigo-900" onClick={()=>{editMou(mou)}}>Edit</a>
+                       
+                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
+                    <a  href="#" className="text-indigo-600 hover:text-indigo-900" onClick={()=>{editNotification(commem)}}>Edit</a>
                     </td>
 
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
-                        <a href="#" onClick={()=>{confirmDelete(mou.doc_id)}} className="text-indigo-600 hover:text-indigo-900">
+                        <a href="#" onClick={()=>{confirmDelete(commem.mem_id)}} className="text-indigo-600 hover:text-indigo-900">
                           Delete
-                          <span className="sr-only">, {mou.doc_id}</span>
+                          <span className="sr-only">, {commem.mem_id}</span>
                         </a>
                       </td>
                     </tr>

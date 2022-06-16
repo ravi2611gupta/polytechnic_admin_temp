@@ -6,6 +6,7 @@ import AddWorkShop from '../../components/global/AddWorkShop'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
+import Loader from '../../components/global/Loader'
 
 
 export default function Index() {
@@ -15,6 +16,9 @@ export default function Index() {
   // adding notice
   let [isOpen, setIsOpen] = useState(false)
   
+  // loader
+  const [spinner, setSpinner] = useState(false);
+
   // for reloading the table
   const [dataAdded,setDataAdded] = useState(false);
   
@@ -24,7 +28,8 @@ export default function Index() {
 
   const [formData, setFormData] = useState({
     file:"",
-    title:"" 
+    title:"",
+    type:""
   })
 
 
@@ -40,8 +45,8 @@ export default function Index() {
 
   const formSave = async ()=>{
 
-    if(formData.title === "" || formData.file === ""){
-      toast("Please add title and file")
+    if(formData.title === "" || formData.file === "" || formData.type===""){
+      toast("All fields are required!")
     }else{
       try {
         const res = await axios({
@@ -55,6 +60,7 @@ export default function Index() {
           toast.success(res.data.message)
           setDataAdded(!dataAdded)
           formData.title = ""
+          formData.type = ""
           document.getElementById("my-form").reset()
         
         } catch (error) {
@@ -71,9 +77,11 @@ const [viewNoti, setViewNoti] = useState([])
 
 
 useEffect(()=>{
+  setSpinner(true);
 axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
   // console.table(date);
   setViewNoti(data.data)
+  setSpinner(false);
 })
 }, [dataAdded])
 
@@ -112,7 +120,8 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
   // editing data
   const [updateFormData, setUpdateFormData] = useState({
     file_id:"",
-    title:"", 
+    title:"",
+    type:"",
     file:"",
   })
 
@@ -194,6 +203,19 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
         <div className="shadow sm:rounded-md sm:overflow-hidden">
           <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
             <div className="grid grid-cols-2 gap-6">
+
+            <div className="col-span-2 sm:col-span-1">
+                <label htmlFor="type" className="block text-sm font-medium text-gray-700"> Type </label>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <select value={formData.type} onChange={(e)=>{ setFormData({...formData, type:e.target.value}) }} name="type" id="type" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300">
+                    <option value="" defaultChecked disabled>Select Notice Type</option>
+                    <option value="general">General Notice</option>
+                    <option value="department">Department Notice</option>
+                    <option value="examination">Examination Notice</option>
+                    </select>
+                </div>
+              </div>
+
             <div className="col-span-1 sm:col-span-1">
                 <label htmlFor="company-website" className="block text-sm font-medium text-gray-700"> Title </label>
                 <div className="mt-1 flex rounded-md shadow-sm">
@@ -271,6 +293,18 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
                               <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
                                 <div className="grid grid-cols-1 gap-6">
                                   <input type="hidden" name="file_id" value={updateFormData.file_id}/>
+                                  <div className="col-span-1 sm:col-span-1">
+                                    <label htmlFor="type" className="block text-sm font-medium text-gray-700"> Type </label>
+                                    <div className="mt-1 flex rounded-md shadow-sm">
+                                      <select value={updateFormData.type} onChange={(e)=>{ setUpdateFormData({...updateFormData, type:e.target.value}) }} name="type" id="type" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300">
+                                        <option value="" disabled>Select Notice Type</option>
+                                        <option value="general">General Notice</option>
+                                        <option value="department">Department Notice</option>
+                                        <option value="examination">Examination Notice</option>
+                                        </select>
+                                    </div>
+                                  </div>
+
                                 <div className="col-span-1 sm:col-span-1">
                                     <label htmlFor="company-website" className="block text-sm font-medium text-gray-700"> Title </label>
                                     <div className="mt-1 flex rounded-md shadow-sm">
@@ -325,6 +359,9 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
                       Notification
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      Notice Type
+                    </th>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       File
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -342,7 +379,7 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+               {!spinner? <tbody className="divide-y divide-gray-200 bg-white">
 
               {viewNoti?viewNoti.map((noti, idx)=>{
                   return(
@@ -351,6 +388,7 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
                       {idx+1}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{noti.notice}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{noti.type}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><a href={`http://localhost/mohammadi_api/files/notice/${noti.file_name}`} className="text-indigo-600" target='_blank'>Click Here to View</a></td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{noti.date}</td>
                   
@@ -364,13 +402,13 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
                       </a>
                     </td>
 
-                   
+                  
                 </tr>
                   )
               }):"Sorry, no data found!"}
-              
 
-                </tbody>
+
+                </tbody>:<tr><td colSpan={7}><Loader/></td></tr>}
               </table>
             </div>
           </div>

@@ -9,6 +9,7 @@ import { XIcon } from '@heroicons/react/outline'
 
 
 import toast from 'react-hot-toast'
+import Loader from '../../components/global/Loader'
 
 
 export default function Slider() {
@@ -18,6 +19,9 @@ export default function Slider() {
 
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
+
+  // loader
+  const [spinner, setSpinner] = useState(false);
 
   // overlay
   const [overlayOpen, setOverlayOpen] = useState(false)
@@ -81,9 +85,11 @@ export default function Slider() {
   const [viewSlider, setViewSlider] = useState([]);
   
   useEffect(() => {
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/slider_show.php").then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewSlider(data.data);
+      setSpinner(false);
     });
   }, [dataAdded]);
 
@@ -378,7 +384,7 @@ export default function Slider() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+              {!spinner?  <tbody className="divide-y divide-gray-200 bg-white">
                 {viewSlider?viewSlider.map((slider, idx) => {
                   return (
                     <tr key={slider.slider_id}>
@@ -412,7 +418,7 @@ export default function Slider() {
                     </tr>
                   );
                 }):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={7}><Loader/></td></tr>}
               </table>
             </div>
           </div>

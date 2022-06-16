@@ -8,6 +8,7 @@ import { XIcon } from '@heroicons/react/outline'
 
 
 import toast from 'react-hot-toast'
+import Loader from '../../components/global/Loader'
 
 
 export default function Index() {
@@ -18,6 +19,9 @@ export default function Index() {
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
  
+  // loader
+  const [spinner, setSpinner] = useState(false);
+
   // overlay
   const [overlayOpen, setOverlayOpen] = useState(false)
   
@@ -83,9 +87,11 @@ export default function Index() {
   const [viewGallery, setViewGallery] = useState([]);
   
   useEffect(() => {
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/gallery_show_all.php").then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewGallery(data.data);
+      setSpinner(false);
     });
   }, [dataAdded]);
 
@@ -413,7 +419,7 @@ export default function Index() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+               {!spinner? <tbody className="divide-y divide-gray-200 bg-white">
                 {viewGallery?viewGallery.map((gal, idx) => {
                   return (
                     <tr key={gal.gal_id}>
@@ -448,7 +454,7 @@ export default function Index() {
                     </tr>
                   );
                 }):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={8}><Loader/></td></tr>}
               </table>
             </div>
           </div>

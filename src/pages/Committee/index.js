@@ -26,20 +26,20 @@ export default function Workshops() {
 
   // step 1 : create initial values
   const initialValues = {
-    branch: "",
+    committee: "",
   };
 
   // step 2 : create validation schema for form fields using yup
-  const branchFormSchema = Yup.object().shape({
-    branch: Yup.string()
+  const CommiteeFormSchema = Yup.object().shape({
+    committee: Yup.string()
       .min(3, "Minimum 3 Letter")
-      .required("Branch Is Required"),
+      .required("Committee Is Required"),
   });
 
   // Initialize Formik Form
   const formik = useFormik({
     initialValues,
-    validationSchema: branchFormSchema,
+    validationSchema: CommiteeFormSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
       console.log("Form Submited");
       formSave(values);
@@ -50,14 +50,14 @@ export default function Workshops() {
     try {
       const res = await axios({
         method: "post",
-        url: "http://localhost/mohammadi_api/branch_add.php",
+        url: "http://localhost/mohammadi_api/committee_add.php",
         data: val,
       });
 
       console.log(res);
       toast.success(res.data.message);
       setDataAdded(!dataAdded);
-      val.branch = "";
+      val.committee = "";
     } catch (error) {
       console.log(error);
     }
@@ -66,14 +66,15 @@ export default function Workshops() {
 
 
 
+
   
   // calling view branch api
-  const [viewBranch, setViewBranch] = useState([]);
+  const [viewCommittee, setViewCommittee] = useState([]);
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/branch_show.php").then((res) => {
+    axios.get("http://localhost/mohammadi_api/committee_show.php").then((res) => {
       console.log("Incoming data from Branch req:", res);
-      setViewBranch(res.data);
+      setViewCommittee(res.data);
       setSpinner(false);
     });
   }, [dataAdded]);
@@ -83,15 +84,15 @@ export default function Workshops() {
   
 
   // Deleting data
-  const confirmDelete = async (branch_id) => {
+  const confirmDelete = async (cc_id) => {
     if(window.confirm("Are you sure you want to delete?")){
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/branch_del.php",
-          data:branch_id
+          url:"http://localhost/mohammadi_api/committee_del.php",
+          data:cc_id
         })
-        console.log("Branch delete response : ", res)
+        console.log("Committee delete response : ", res)
         toast.success(res.data.message)
         setDataAdded(!dataAdded)
       }catch(error){
@@ -105,15 +106,15 @@ export default function Workshops() {
 
   // updating data
   const [updateFormData, setUpdateFormData] = useState({
-    branch_id:"",
-    branch:""
+    cc_id:"",
+    committee:""
   })
 
   
-  const editBranch = (branch)=>{
+  const editBranch = (committee)=>{
 
     setOverlayOpen(true)
-    setUpdateFormData({...updateFormData, branch_id:branch.dept_id,branch:branch.dept_name})
+    setUpdateFormData({...updateFormData, cc_id:committee.cc_id,committee:committee.committee_name})
     
   }
 
@@ -123,14 +124,14 @@ export default function Workshops() {
   }
 
   const updateFormSave = async () =>{
-    if(updateFormData.branch === ""){
-      toast("Branch is required")
+    if(updateFormData.committee === ""){
+      toast("Committee is required")
     }else{
       // console.log("sending data for updation : ", updateFormData)
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/branch_update.php",
+          url: "http://localhost/mohammadi_api/committee_update.php",
           data: updateFormData,
         });
   
@@ -157,7 +158,7 @@ export default function Workshops() {
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-xl font-semibold text-gray-900">Branch</h1>
+            <h1 className="text-xl font-semibold text-gray-900">Committee</h1>
           </div>
         </div>
 
@@ -175,24 +176,24 @@ export default function Workshops() {
                           className="block text-sm font-medium text-gray-700"
                         >
                           {" "}
-                          Branch Name{" "}
+                          Committee Name{" "}
                         </label>
                         <div className="mt-1 flex rounded-md shadow-sm">
                           <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                             {" "}
-                            Branch{" "}
+                            Committee{" "}
                           </span>
                           <input
                             type="text"
-                            {...formik.getFieldProps("branch")}
-                            name="branch"
+                            {...formik.getFieldProps("committee")}
+                            name="committee"
                             className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                            placeholder="Enter Your Branch Name"
+                            placeholder="Enter Your Committee Name"
                           />
                         </div>
-                        {formik.touched.branch && formik.errors.branch ? (
+                        {formik.touched.committee && formik.errors.committee ? (
                           <div className=" text-xs text-red-700">
-                            {formik.errors.branch}
+                            {formik.errors.committee}
                           </div>
                         ) : null}
                       </div>
@@ -203,7 +204,7 @@ export default function Workshops() {
                       type="submit"
                       className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                      Add Branch
+                      Add Committee
                     </button>
                   </div>
                 </div>
@@ -241,7 +242,7 @@ export default function Workshops() {
                   <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-lg font-medium text-gray-900"> Update Branch </Dialog.Title>
+                        <Dialog.Title className="text-lg font-medium text-gray-900"> Update Committee </Dialog.Title>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
@@ -264,10 +265,10 @@ export default function Workshops() {
                                 <div className="grid grid-cols-1 gap-6">
                                   <input type="hidden" name="file_id" value={updateFormData.branch_id}/>
                                 <div className="col-span-1 sm:col-span-1">
-                                    <label htmlFor="company-website" className="block text-sm font-medium text-gray-700"> Branch Name </label>
+                                    <label htmlFor="company-website" className="block text-sm font-medium text-gray-700"> Committee Name </label>
                                     <div className="mt-1 flex rounded-md shadow-sm">
-                                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> Branch </span>
-                                      <input type="text" value={updateFormData.branch} onChange={(e)=>{ setUpdateFormData({...updateFormData, branch:e.target.value}) }}  name="branch" id="company-website" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Branch Name"/>
+                                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> Committee </span>
+                                      <input type="text" value={updateFormData.committee} onChange={(e)=>{ setUpdateFormData({...updateFormData, committee:e.target.value}) }}  name="branch" id="company-website" className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="Enter Committee Name"/>
                                     </div>
                                   </div>
                               
@@ -275,7 +276,7 @@ export default function Workshops() {
                               
                               </div>
                               <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                <button type="submit" onClick={handleUpdate} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update Branch</button>
+                                <button type="submit" onClick={handleUpdate} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update Committee</button>
                               </div>
                             </div>
                           </form>
@@ -312,7 +313,7 @@ export default function Workshops() {
                       S.No.
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Branch
+                      Committee
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Post Date &amp; Time
@@ -327,24 +328,24 @@ export default function Workshops() {
                    
                   </tr>
                 </thead>
-                {!spinner?<tbody className="divide-y divide-gray-200 bg-white">
-              {viewBranch?viewBranch.map((branch, idx) => {
+                {!spinner? <tbody className="divide-y divide-gray-200 bg-white">
+              {viewCommittee?viewCommittee.map((committee, idx) => {
                 return (
-                  <tr key={branch.dept_id}>
+                  <tr key={committee.cc_id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                       {idx+1}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{branch.dept_name}</td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{branch.date}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{committee.committee_name}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{committee.created_at}</td>
                     
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
-                      <a href="#" onClick={()=>{editBranch(branch)}} className="text-indigo-600 hover:text-indigo-900">
-                        Edit<span className="sr-only">, {branch.dept_id}</span>
+                      <a href="#" onClick={()=>{editBranch(committee)}} className="text-indigo-600 hover:text-indigo-900">
+                        Edit<span className="sr-only">, {committee.cc_id}</span>
                       </a>
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
-                      <a href="#" onClick={()=>{confirmDelete(branch.dept_id)}} className="text-indigo-600 hover:text-indigo-900">
-                        Delete<span className="sr-only">, {branch.dept_id}</span>
+                      <a href="#" onClick={()=>{confirmDelete(committee.cc_id)}} className="text-indigo-600 hover:text-indigo-900">
+                        Delete<span className="sr-only">, {committee.cc_id}</span>
                       </a>
                     </td>
                   </tr>

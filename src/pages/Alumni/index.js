@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import AddWorkShop from '../../components/global/AddWorkShop'
+import Loader from '../../components/global/Loader'
 
  
 export default function Workshops() {
@@ -11,15 +12,19 @@ export default function Workshops() {
 
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
-
+  
+  // loader
+  const [spinner, setSpinner] = useState(false);
 
 
   // view_alumni api call
   const [viewAlumni, setViewAlumni] = useState([])
   useEffect(()=>{
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/alumni_show_all.php").then((data)=>{
       console.log("Console from alumni page : ", data)
       setViewAlumni(data.data)
+      setSpinner(false);
       // setViewAlumni(!viewAlumni.status)
     })
   }, [dataAdded])
@@ -158,7 +163,7 @@ export default function Workshops() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                {!spinner?<tbody className="divide-y divide-gray-200 bg-white">
                 {viewAlumni?viewAlumni.map((alumni, idx) => {
                   return (
                     <tr key={alumni.id}>
@@ -194,7 +199,7 @@ export default function Workshops() {
                   </tr>
                   );
                 }):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={18}><Loader/></td></tr>}
               </table>
             </div>
           </div>

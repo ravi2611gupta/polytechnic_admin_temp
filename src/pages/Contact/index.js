@@ -4,6 +4,7 @@ import AddWorkShop from '../../components/global/AddWorkShop'
 import Select from "react-select";
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Loader from '../../components/global/Loader';
 
 const people = [
     { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
@@ -22,14 +23,19 @@ export default function Workshops() {
     // for reloading the table
     const [dataAdded, setDataAdded] = useState(false);
 
+  // loader
+  const [spinner, setSpinner] = useState(false);
+
 
   // fetching data from contact_show api add
   const [viewContact, setViewContact] = useState([])
 
   useEffect(()=>{
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/contact_show.php").then((data)=>{
       console.log("Getting Data from contact_show api : ", data)
       setViewContact(data.data)
+      setSpinner(false);
     })
   }, [dataAdded])
   // fetching data from contact_show api end
@@ -110,7 +116,7 @@ export default function Workshops() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+               {!spinner? <tbody className="divide-y divide-gray-200 bg-white">
                   {viewContact?viewContact.map((contact, idx) => (
                     <tr key={contact.con_id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -129,7 +135,7 @@ export default function Workshops() {
                       </td>
                     </tr>
                   )):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={7}><Loader/></td></tr>}
               </table>
             </div>
           </div>

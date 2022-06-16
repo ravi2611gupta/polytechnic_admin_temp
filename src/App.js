@@ -10,6 +10,8 @@ import Aicte from "./pages/Aicte";
 import Mou from "./pages/Mou";
 import TeacherAdd from "./pages/TeacherAdd";
 import TeacherView from "./pages/TeacherView";
+import Committee from "./pages/Committee";
+import CommitteeMem from "./pages/CommitteeMem";
 import Slider from "./pages/Slider";
 import Gallery from "./pages/Gallery";
 import Acal from "./pages/Acal";
@@ -129,6 +131,26 @@ function App() {
           element={
             <Layout>
               <TeacherView />
+            </Layout>
+          }
+        >
+        </Route>
+
+            <Route
+          path="/committee"
+          element={
+            <Layout>
+              <Committee />
+            </Layout>
+          }
+        >
+        </Route>
+
+            <Route
+          path="/committeemem"
+          element={
+            <Layout>
+              <CommitteeMem />
             </Layout>
           }
         >

@@ -62,15 +62,17 @@ export default function Login() {
       <div className="min-h-screen flex">
         <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96">
-            {loading ? toast("Loading...") : null}
-            {error ? toast({error}) : null}
-
-            <div>
+         
+            <div className="text-center">
               <img
                 className="h-28 w-auto mx-auto"
                 src={require('../../gpm-logo-black.png')}
                 alt="GP Mohammadi"
               />
+
+            {loading ? <p className="text-green-600">Validating Credentials </p>: null}
+            {error ? <p className="text-red-600">{error}</p> : null}
+
             </div>
 
             <div className="mt-8">

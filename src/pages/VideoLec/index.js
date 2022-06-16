@@ -8,6 +8,7 @@ import { XIcon } from '@heroicons/react/outline'
 
 
 import toast from 'react-hot-toast'
+import Loader from '../../components/global/Loader'
 
 
 export default function VideoLecture() {
@@ -17,6 +18,9 @@ export default function VideoLecture() {
 
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
+
+  // loader
+  const [spinner, setSpinner] = useState(false);
   
   // overlay
   const [overlayOpen, setOverlayOpen] = useState(false)
@@ -89,9 +93,11 @@ export default function VideoLecture() {
   const [viewVideo, setViewVideo] = useState([]);
   
   useEffect(() => {
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/video_show.php").then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewVideo(data.data);
+      setSpinner(false);
     });
   }, [dataAdded]);
 
@@ -448,7 +454,7 @@ export default function VideoLecture() {
                    
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+               {!spinner? <tbody className="divide-y divide-gray-200 bg-white">
                 {viewVideo?viewVideo.map((video, idx) => {
                   return (
                     <tr key={video.v_id}>
@@ -488,7 +494,7 @@ export default function VideoLecture() {
                     </tr>
                   );
                 }):"Sorry, no data found!"}
-                </tbody>
+                </tbody>:<tr><td colSpan={9}><Loader/></td></tr>}
               </table>
             </div>
           </div>

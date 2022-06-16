@@ -9,7 +9,6 @@ import {
 } from "@heroicons/react/outline";
 import {
   BellIcon,
-  CashIcon,
   CheckCircleIcon,
   ChevronDownIcon,
   ChevronRightIcon,
@@ -23,6 +22,7 @@ import Sidebar from "../../components/global/Sidebar";
 import Header from "../../components/global/Header";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Loader from "../../components/global/Loader";
 
 
 
@@ -42,31 +42,42 @@ export default function Dashboard() {
   const [teacherCount, setTeacherCount] = useState([])
   const [contactCount, setContactCount] = useState([])
 
+  // loader
+  const [spinner, setSpinner] = useState(false);
+
   useEffect(()=>{
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/latest_noti_show.php").then((data)=>{
       // console.table(date);
       setViewNoti(data.data)
+      setSpinner(false);
     })
     }, [])
 
   useEffect(()=>{
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/noti_count.php").then((data1)=>{
       // console.table(date);
       setNotiCount(data1.data[0])
+      setSpinner(false);
     })
     }, [])
 
   useEffect(()=>{
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/teacher_count.php").then((data2)=>{
       // console.table(data2);
       setTeacherCount(data2.data[0])
+      setSpinner(false);
     })
     }, [])
 
   useEffect(()=>{
+    setSpinner(true);
     axios.get("http://localhost/mohammadi_api/contact_count.php").then((data3)=>{
       // console.table("Contact No. : ", data3.data[0].contact_no);
       setContactCount(data3.data[0])
+      setSpinner(false);
     })
     }, [])
 
@@ -133,7 +144,7 @@ export default function Dashboard() {
                 </div>
                 <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
                   
-                  <a href="http://test.polyprep.co.in" target="_blank"
+                  <a href="http://localhost" target="_blank"
                     type="button"
                     className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                   >
@@ -214,6 +225,12 @@ export default function Dashboard() {
                             Notification
                           </th>
                           <th
+                            className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            scope="col"
+                          >
+                            Type
+                          </th>
+                          <th
                             className="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                             scope="col"
                           >
@@ -228,7 +245,7 @@ export default function Dashboard() {
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
+                      {!spinner?<tbody className="bg-white divide-y divide-gray-200">
                         {viewNoti.map((noti) => (
                           <tr key={noti.file_id} className="bg-white">
                             <td className="max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -244,6 +261,9 @@ export default function Dashboard() {
                               </div>
                             </td>
                             <td className="px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500">
+                              {noti.type}
+                            </td>
+                            <td className="px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500">
                               <a href={`http://localhost/mohammadi_api/files/notice/${noti.file_name}`} target="_blank" className="text-indigo-600 font-medium">
                                 Click here to view
                               </a>
@@ -256,7 +276,7 @@ export default function Dashboard() {
                             
                           </tr>
                         ))}
-                      </tbody>
+                      </tbody>:<tr><td colSpan={4}><Loader/></td></tr>}
                     </table>
                     {/* Pagination */}
                    
