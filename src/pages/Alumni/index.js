@@ -7,6 +7,8 @@ import Loader from '../../components/global/Loader'
  
 export default function Workshops() {
 
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
  
   let [isOpen, setIsOpen] = useState(false)
 
@@ -21,7 +23,7 @@ export default function Workshops() {
   const [viewAlumni, setViewAlumni] = useState([])
   useEffect(()=>{
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/alumni_show_all.php").then((data)=>{
+    axios.get(`${apiPrefix}/alumni_show_all.php`).then((data)=>{
       console.log("Console from alumni page : ", data)
       setViewAlumni(data.data)
       setSpinner(false);
@@ -39,7 +41,7 @@ export default function Workshops() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/alumni_del.php",
+          url:`${apiPrefix}/alumni_del.php`,
           data:alumni_id
         })
         console.log("Alumni delete response : ", res)
@@ -60,7 +62,7 @@ export default function Workshops() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/alumni_update.php",
+          url:`${apiPrefix}/alumni_update.php`,
           data:alumni_id
         })
         console.log("Alumni Update response : ", res)
@@ -170,7 +172,7 @@ export default function Workshops() {
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                       {idx+1}
                     </td>
-                    <td className="whitespace-nowrap w-52 text-sm text-gray-500"><img src={`http://localhost/mohammadi_api/files/alumni_pic/${alumni.pic}`} style={{width:"100px"}} alt="" /></td>
+                    <td className="whitespace-nowrap w-52 text-sm text-gray-500"><img src={`${apiPrefix}/files/alumni_pic/${alumni.pic}`} style={{width:"100px"}} alt="" /></td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{alumni.name}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{alumni.enrollment}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{alumni.fname}</td>
@@ -183,7 +185,7 @@ export default function Workshops() {
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{alumni.designation}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{alumni.feedback}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{alumni.about}</td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><a className='text-indigo-600' href={`http://localhost/mohammadi_api/files/alumni_cv/${alumni.cv}`} target="_blank">Click here to view</a></td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><a className='text-indigo-600' href={`${apiPrefix}/files/alumni_cv/${alumni.cv}`} target="_blank">Click here to view</a></td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{alumni.date}</td>
                     
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">

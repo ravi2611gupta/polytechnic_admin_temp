@@ -35,6 +35,9 @@ function classNames(...classes) {
   
 
 export default function Dashboard() {
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [viewNoti, setViewNoti] = useState([])
@@ -47,7 +50,7 @@ export default function Dashboard() {
 
   useEffect(()=>{
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/latest_noti_show.php").then((data)=>{
+    axios.get(`${apiPrefix}/latest_noti_show.php`).then((data)=>{
       // console.table(date);
       setViewNoti(data.data)
       setSpinner(false);
@@ -56,7 +59,7 @@ export default function Dashboard() {
 
   useEffect(()=>{
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/noti_count.php").then((data1)=>{
+    axios.get(`${apiPrefix}/noti_count.php`).then((data1)=>{
       // console.table(date);
       setNotiCount(data1.data[0])
       setSpinner(false);
@@ -65,7 +68,7 @@ export default function Dashboard() {
 
   useEffect(()=>{
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/teacher_count.php").then((data2)=>{
+    axios.get(`${apiPrefix}/teacher_count.php`).then((data2)=>{
       // console.table(data2);
       setTeacherCount(data2.data[0])
       setSpinner(false);
@@ -74,7 +77,7 @@ export default function Dashboard() {
 
   useEffect(()=>{
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/contact_count.php").then((data3)=>{
+    axios.get(`${apiPrefix}/contact_count.php`).then((data3)=>{
       // console.table("Contact No. : ", data3.data[0].contact_no);
       setContactCount(data3.data[0])
       setSpinner(false);
@@ -264,7 +267,7 @@ export default function Dashboard() {
                               {noti.type}
                             </td>
                             <td className="px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500">
-                              <a href={`http://localhost/mohammadi_api/files/notice/${noti.file_name}`} target="_blank" className="text-indigo-600 font-medium">
+                              <a href={`${apiPrefix}/files/notice/${noti.file_name}`} target="_blank" className="text-indigo-600 font-medium">
                                 Click here to view
                               </a>
                             </td>

@@ -13,6 +13,8 @@ import Loader from '../../components/global/Loader'
 
 export default function Index() {
 
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
  
   let [isOpen, setIsOpen] = useState(false)
 
@@ -55,7 +57,7 @@ export default function Index() {
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/gallery_add.php",
+       url:`${apiPrefix}/gallery_add.php`,
        data: formData,
        headers: { "Content-Type": "multipart/form-data"}
       })
@@ -88,7 +90,7 @@ export default function Index() {
   
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/gallery_show_all.php").then((data) => {
+    axios.get(`${apiPrefix}/gallery_show_all.php`).then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewGallery(data.data);
       setSpinner(false);
@@ -106,7 +108,7 @@ export default function Index() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/gallery_del.php",
+          url:`${apiPrefix}/gallery_del.php`,
           data:gallery_id
         })
         console.log("Gallery delete response : ", res)
@@ -159,7 +161,7 @@ export default function Index() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/gallery_update.php",
+          url: `${apiPrefix}/gallery_update.php`,
           data: updateFormData,
           headers: { "Content-Type": "multipart/form-data"},
           });
@@ -427,7 +429,7 @@ export default function Index() {
                         {idx+1}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        <img src={`http://localhost/mohammadi_api/files/gallery/${gal.pic}`} style={{height:"100px"}} alt="" />
+                        <img src={`${apiPrefix}/files/gallery/${gal.pic}`} style={{height:"100px"}} alt="" />
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {gal.text1}

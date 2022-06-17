@@ -6,9 +6,11 @@ import Loader from '../../components/global/Loader';
 
 
 export default function ViewGrievance() {
-
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+  
   let [isOpen, setIsOpen] = useState(false)
-
+ 
   // for reloading the table
   const [dataAdded, setDataAdded] = useState(false);
 
@@ -19,7 +21,7 @@ export default function ViewGrievance() {
   const [viewGrievance, setViewGrievance] = useState([])
   useEffect(()=>{
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/grievance_show.php").then((data)=>{
+    axios.get(`${apiPrefix}/grievance_show.php`).then((data)=>{
       console.log("Fetching griv Data : ",data)
       setViewGrievance(data.data)
       setSpinner(false);
@@ -37,7 +39,7 @@ export default function ViewGrievance() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/grievance_del.php",
+          url:`${apiPrefix}/grievance_del.php`,
           data:griv_id
         })
         console.log("Grievance delete response : ", res)
@@ -60,7 +62,7 @@ export default function ViewGrievance() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/grievance_update.php",
+          url:`${apiPrefix}/grievance_update.php`,
           data:griv_id
         })
         console.log("Grievance updated response : ", res)

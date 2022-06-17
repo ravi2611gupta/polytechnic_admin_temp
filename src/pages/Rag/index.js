@@ -7,6 +7,9 @@ import Loader from '../../components/global/Loader';
 
 export default function ViewRag() {
 
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
   let [isOpen, setIsOpen] = useState(false)
 
   // for reloading the table
@@ -19,7 +22,7 @@ export default function ViewRag() {
   const [viewRag, setViewRag] = useState([])
   useEffect(()=>{
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/rag_show.php").then((data)=>{
+    axios.get(`${apiPrefix}/rag_show.php`).then((data)=>{
       console.log("Fetching Anti Ragging Data : ",data)
       setViewRag(data.data)
       setSpinner(false);
@@ -35,7 +38,7 @@ export default function ViewRag() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/rag_del.php",
+          url:`${apiPrefix}/rag_del.php`,
           data:rag_id
         })
         console.log("Anti Ragging delete response : ", res)
@@ -54,7 +57,7 @@ export default function ViewRag() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/rag_update.php",
+          url:`${apiPrefix}/rag_update.php`,
           data:rag_id
         })
         console.log("Anti Ragging update response : ", res)

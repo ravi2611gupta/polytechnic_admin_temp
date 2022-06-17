@@ -14,6 +14,8 @@ import Loader from '../../components/global/Loader'
 
 export default function Slider() {
 
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
  
   let [isOpen, setIsOpen] = useState(false)
 
@@ -54,7 +56,7 @@ export default function Slider() {
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/slider_add.php",
+       url:`${apiPrefix}/slider_add.php`,
        data: sldierformData,
        headers: { "Content-Type": "multipart/form-data"}
       })
@@ -86,7 +88,7 @@ export default function Slider() {
   
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/slider_show.php").then((data) => {
+    axios.get(`${apiPrefix}/slider_show.php`).then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewSlider(data.data);
       setSpinner(false);
@@ -103,7 +105,7 @@ export default function Slider() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/slider_del.php",
+          url:`${apiPrefix}/slider_del.php`,
           data:slide_id
         })
         console.log("Slider delete response : ", res)
@@ -157,7 +159,7 @@ export default function Slider() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/slider_update.php",
+          url: `${apiPrefix}/slider_update.php`,
           data: updateFormData,
           headers: { "Content-Type": "multipart/form-data"},
           });
@@ -392,7 +394,7 @@ export default function Slider() {
                         {idx+1}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        <img src={`http://localhost/mohammadi_api/files/slider/${slider.pic}`} style={{height:"100px", width:"160px"}}/>
+                        <img src={`${apiPrefix}/files/slider/${slider.pic}`} style={{height:"100px", width:"160px"}}/>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {slider.text1}

@@ -13,6 +13,9 @@ import Loader from '../../components/global/Loader'
 
 export default function VideoLecture() {
 
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
  
   let [isOpen, setIsOpen] = useState(false)
 
@@ -51,7 +54,7 @@ export default function VideoLecture() {
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/video_add.php",
+       url:`${apiPrefix}/video_add.php`,
        data: videoFormData,
        headers: { "Content-Type": "multipart/form-data"}
       })
@@ -79,7 +82,7 @@ export default function VideoLecture() {
   const [viewBranch, setViewBranch] = useState([]);
   
   useEffect(() => {
-    axios.get("http://localhost/mohammadi_api/branch_show.php").then((data) => {
+    axios.get(`${apiPrefix}/branch_show.php`).then((data) => {
       console.log("Incoming data from branch req:", data);
       setViewBranch(data.data);
     });
@@ -94,7 +97,7 @@ export default function VideoLecture() {
   
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/video_show.php").then((data) => {
+    axios.get(`${apiPrefix}/video_show.php`).then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewVideo(data.data);
       setSpinner(false);
@@ -112,7 +115,7 @@ export default function VideoLecture() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/video_del.php",
+          url:`${apiPrefix}/video_del.php`,
           data:v_id
         })
         console.log("Video delete response : ", res)
@@ -165,7 +168,7 @@ export default function VideoLecture() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/video_update.php",
+          url: `${apiPrefix}/video_update.php`,
           data: updateFormData
           });
 

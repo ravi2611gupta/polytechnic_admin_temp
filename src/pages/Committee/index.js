@@ -12,6 +12,9 @@ import toast from "react-hot-toast";
 import Loader from "../../components/global/Loader";
 
 export default function Workshops() {
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
   let [isOpen, setIsOpen] = useState(false);
 
   // for reloading the table
@@ -50,7 +53,7 @@ export default function Workshops() {
     try {
       const res = await axios({
         method: "post",
-        url: "http://localhost/mohammadi_api/committee_add.php",
+        url: `${apiPrefix}/committee_add.php`,
         data: val,
       });
 
@@ -72,7 +75,7 @@ export default function Workshops() {
   const [viewCommittee, setViewCommittee] = useState([]);
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/committee_show.php").then((res) => {
+    axios.get(`${apiPrefix}/committee_show.php`).then((res) => {
       console.log("Incoming data from Branch req:", res);
       setViewCommittee(res.data);
       setSpinner(false);
@@ -89,7 +92,7 @@ export default function Workshops() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/committee_del.php",
+          url:`${apiPrefix}/committee_del.php`,
           data:cc_id
         })
         console.log("Committee delete response : ", res)
@@ -131,7 +134,7 @@ export default function Workshops() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/committee_update.php",
+          url: `${apiPrefix}/committee_update.php`,
           data: updateFormData,
         });
   

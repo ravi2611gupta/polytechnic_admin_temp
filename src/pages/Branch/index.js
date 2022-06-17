@@ -12,6 +12,9 @@ import toast from "react-hot-toast";
 import Loader from "../../components/global/Loader";
 
 export default function Workshops() {
+
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
   let [isOpen, setIsOpen] = useState(false);
 
   // for reloading the table
@@ -50,7 +53,7 @@ export default function Workshops() {
     try {
       const res = await axios({
         method: "post",
-        url: "http://localhost/mohammadi_api/branch_add.php",
+        url: `${apiPrefix}/branch_add.php`,
         data: val,
       });
 
@@ -71,7 +74,7 @@ export default function Workshops() {
   const [viewBranch, setViewBranch] = useState([]);
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/branch_show.php").then((res) => {
+    axios.get(`${apiPrefix}/branch_show.php`).then((res) => {
       console.log("Incoming data from Branch req:", res);
       setViewBranch(res.data);
       setSpinner(false);
@@ -88,7 +91,7 @@ export default function Workshops() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/branch_del.php",
+          url:`${apiPrefix}/branch_del.php`,
           data:branch_id
         })
         console.log("Branch delete response : ", res)
@@ -130,7 +133,7 @@ export default function Workshops() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/branch_update.php",
+          url: `${apiPrefix}/branch_update.php`,
           data: updateFormData,
         });
   

@@ -16,6 +16,9 @@ const people = [
 
 export default function Result() {
 
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+
  
   let [isOpen, setIsOpen] = useState(false)
 
@@ -47,7 +50,7 @@ export default function Result() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/result_add.php",
+          url:`${apiPrefix}/result_add.php`,
           data:resultFormData,
           headers: { "Content-Type": "multipart/form-data"}
         })
@@ -71,7 +74,7 @@ export default function Result() {
 
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/result_show_all.php").then((data)=>{
+    axios.get(`${apiPrefix}/result_show_all.php`).then((data)=>{
       console.log("result fetch api : ", data)
       setViewResult(data.data)
       setSpinner(false);
@@ -87,7 +90,7 @@ export default function Result() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/result_del.php",
+          url:`${apiPrefix}/result_del.php`,
           data:res_id
         })
         console.log("Result delete response : ", res)
@@ -132,7 +135,7 @@ export default function Result() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/result_update.php",
+          url: `${apiPrefix}/result_update.php`,
           data: updateFormData,
         });
   

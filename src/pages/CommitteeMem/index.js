@@ -13,6 +13,9 @@ import Loader from '../../components/global/Loader'
 
 export default function VideoLecture() {
 
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
  
   let [isOpen, setIsOpen] = useState(false)
 
@@ -49,7 +52,7 @@ export default function VideoLecture() {
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/committee_mem_add.php",
+       url:`${apiPrefix}/committee_mem_add.php`,
        data: committeeMemData,
        headers: { "Content-Type": "multipart/form-data"}
       })
@@ -76,7 +79,7 @@ export default function VideoLecture() {
   
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/committee_show.php").then((data) => {
+    axios.get(`${apiPrefix}/committee_show.php`).then((data) => {
       console.log("Incoming data from committee req:", data);
       setViewCommittee(data.data);
       setSpinner(false);
@@ -91,7 +94,7 @@ export default function VideoLecture() {
   const [viewCommitteeMem, setViewCommitteeMem] = useState([]);
   
   useEffect(() => {
-    axios.get("http://localhost/mohammadi_api/committee_mem_show.php").then((data) => {
+    axios.get(`${apiPrefix}/committee_mem_show.php`).then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewCommitteeMem(data.data);
     });
@@ -108,7 +111,7 @@ export default function VideoLecture() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/committee_mem_del.php",
+          url:`${apiPrefix}/committee_mem_del.php`,
           data:com_id
         })
         console.log("Committee Member delete response : ", res)
@@ -160,7 +163,7 @@ export default function VideoLecture() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/committee_mem_update.php",
+          url: `${apiPrefix}/committee_mem_update.php`,
           data: updateFormData
           });
 

@@ -11,6 +11,9 @@ import Loader from '../../components/global/Loader';
 
 export default function ViewTeacher() {
 
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
   let [isOpen, setIsOpen] = useState(false)
 
   // for reloading the table
@@ -26,7 +29,7 @@ export default function ViewTeacher() {
   const [viewTeacher, setViewTeacher] = useState([])
   useEffect(()=>{
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/teacher_show.php").then((data)=>{
+    axios.get(`${apiPrefix}/teacher_show.php`).then((data)=>{
       console.log("Fetching Teacher Data : ",data)
       setViewTeacher(data.data)
       setSpinner(false);
@@ -41,7 +44,7 @@ export default function ViewTeacher() {
   // fetching department 
   const [viewBranch, setViewBranch] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost/mohammadi_api/branch_show.php").then((data) => {
+    axios.get(`${apiPrefix}/branch_show.php`).then((data) => {
       console.log("Incoming data from branch req:", data);
       setViewBranch(data.data);
     });
@@ -56,7 +59,7 @@ export default function ViewTeacher() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/teacher_del.php",
+          url:`${apiPrefix}/teacher_del.php`,
           data:tech_id
         })
         console.log("Teacher delete response : ", res)
@@ -123,7 +126,7 @@ export default function ViewTeacher() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/teacher_update.php",
+          url: `${apiPrefix}/teacher_update.php`,
           data: updateFormData,
           headers: { "Content-Type": "multipart/form-data"},
           });
@@ -236,7 +239,7 @@ export default function ViewTeacher() {
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                         {idx+1}
                       </td>
-                      <td className="whitespace-nowrap text-sm text-gray-500"><img src={`http://localhost/mohammadi_api/files/teacher/${teacher.pic}`} alt="" /></td>
+                      <td className="whitespace-nowrap text-sm text-gray-500"><img src={`${apiPrefix}/files/teacher/${teacher.pic}`} alt="" /></td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{teacher.dor}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{teacher.name}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{teacher.dob}</td>

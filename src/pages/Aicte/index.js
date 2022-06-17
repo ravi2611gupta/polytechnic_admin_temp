@@ -12,6 +12,8 @@ import Loader from '../../components/global/Loader'
 export default function Workshops() {
 
  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
   let [isOpen, setIsOpen] = useState(false)
   
   // for reloading the table
@@ -48,7 +50,7 @@ export default function Workshops() {
       try{
         const res = await axios({
           method: "post",
-          url:"http://localhost/mohammadi_api/aicte_add.php",
+          url:`${apiPrefix}/aicte_add.php`,
           data: formData,
           headers: { "Content-Type": "multipart/form-data"}
          })   
@@ -75,7 +77,7 @@ export default function Workshops() {
   
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/aicte_show.php").then((data) => {
+    axios.get(`${apiPrefix}/aicte_show.php`).then((data) => {
       console.log("Incoming data from aicte req:", data);
       setViewAicte(data.data);
       setSpinner(false);
@@ -98,7 +100,7 @@ export default function Workshops() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/aicte_del.php",
+          url:`${apiPrefix}/aicte_del.php`,
           data:aicte_id
         })
         console.log("Aicte delete response : ", res)
@@ -154,7 +156,7 @@ export default function Workshops() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/aicte_update.php",
+          url: `${apiPrefix}/aicte_update.php`,
           data: updateFormData,
           headers: { "Content-Type": "multipart/form-data"},
           });
@@ -376,7 +378,7 @@ export default function Workshops() {
                         {idx+1}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{aicte.title}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><a className='text-indigo-600' href={`http://localhost/mohammadi_api/files/aicte/${aicte.file}`} target="_blank" >Click here to view</a></td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><a className='text-indigo-600' href={`${apiPrefix}/files/aicte/${aicte.file}`} target="_blank" >Click here to view</a></td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{aicte.date}</td>
                     
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">

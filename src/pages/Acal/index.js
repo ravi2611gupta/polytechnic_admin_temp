@@ -13,6 +13,7 @@ import Loader from '../../components/global/Loader'
 
 export default function Index() {
 
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
  
   let [isOpen, setIsOpen] = useState(false)
 
@@ -51,7 +52,7 @@ export default function Index() {
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/acal_del.php",
+       url:`${apiPrefix}/acal_del.php`,
        data: acal_id,
       })
 
@@ -66,7 +67,7 @@ export default function Index() {
 
 
   // calling api for form submit
-  // http://localhost/mohammadi_api/acal_add.php
+  // ${apiPrefix}/acal_add.php
   const formSave = async()=>{
 
     if(formData.session === "" || formData.file === ""){
@@ -75,7 +76,7 @@ export default function Index() {
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/acal_add.php",
+       url:`${apiPrefix}/acal_add.php`,
        data: formData,
        headers: { "Content-Type": "multipart/form-data"}
       })
@@ -105,7 +106,7 @@ export default function Index() {
   
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/acal_show.php").then((data) => {
+    axios.get(`${apiPrefix}/acal_show.php`).then((data) => {
       console.log("Incoming data from acal req:", data);
       setViewAcal(data.data);
       setSpinner(false);
@@ -157,7 +158,7 @@ export default function Index() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/acal_update.php",
+          url: `${apiPrefix}/acal_update.php`,
           data: updateFormData,
           headers: { "Content-Type": "multipart/form-data"},
           });
@@ -369,7 +370,7 @@ export default function Index() {
                         {acal.session}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        <a className='text-indigo-600' href={`http://localhost/mohammadi_api/files/acal/${acal.acal_file}`} target="_blank">Click here to view</a>
+                        <a className='text-indigo-600' href={`${apiPrefix}/files/acal/${acal.acal_file}`} target="_blank">Click here to view</a>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {acal.added_on}

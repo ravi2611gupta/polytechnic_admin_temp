@@ -17,11 +17,13 @@ const people = [
 
 export default function Workshops() {
 
+  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
   let [isOpen, setIsOpen] = useState(false)
 
-
-    // for reloading the table
-    const [dataAdded, setDataAdded] = useState(false);
+  // for reloading the table
+  const [dataAdded, setDataAdded] = useState(false);
 
   // loader
   const [spinner, setSpinner] = useState(false);
@@ -32,7 +34,7 @@ export default function Workshops() {
 
   useEffect(()=>{
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/contact_show.php").then((data)=>{
+    axios.get(`${apiPrefix}/contact_show.php`).then((data)=>{
       console.log("Getting Data from contact_show api : ", data)
       setViewContact(data.data)
       setSpinner(false);
@@ -50,7 +52,7 @@ export default function Workshops() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/contact_del.php",
+          url:`${apiPrefix}/contact_del.php`,
           data:contact_id
         })
         console.log("Contact delete response : ", res)

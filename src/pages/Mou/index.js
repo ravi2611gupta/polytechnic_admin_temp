@@ -12,6 +12,8 @@ import Loader from '../../components/global/Loader'
 export default function Mou() {
 
  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
   let [isOpen, setIsOpen] = useState(false)
 
   // for reloading the table
@@ -51,7 +53,7 @@ export default function Mou() {
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/mou_add.php",
+       url:`${apiPrefix}/mou_add.php`,
        data: mouFormData,
        headers: { "Content-Type": "multipart/form-data"}
       })
@@ -80,7 +82,7 @@ export default function Mou() {
   
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/mou_show.php").then((data) => {
+    axios.get(`${apiPrefix}/mou_show.php`).then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewMou(data.data);
       setSpinner(false);
@@ -100,7 +102,7 @@ export default function Mou() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/mou_del.php",
+          url:`${apiPrefix}/mou_del.php`,
           data:mou_id
         })
         console.log("MOU delete response : ", res)
@@ -160,7 +162,7 @@ export default function Mou() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/mou_update.php",
+          url: `${apiPrefix}/mou_update.php`,
           data: updateFormData,
           headers: { "Content-Type": "multipart/form-data"},
           });
@@ -408,7 +410,7 @@ export default function Mou() {
                         {mou.company}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        <a href={`http://localhost/mohammadi_api/files/mou/${mou.file}`} className="text-indigo-600" target="_blank">Click here to view</a>
+                        <a href={`${apiPrefix}/files/mou/${mou.file}`} className="text-indigo-600" target="_blank">Click here to view</a>
                       </td>
                      
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

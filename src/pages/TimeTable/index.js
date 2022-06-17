@@ -13,6 +13,8 @@ import Loader from '../../components/global/Loader'
 export default function TimeTable() {
 
  
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
   let [isOpen, setIsOpen] = useState(false)
 
   // for reloading the table
@@ -54,7 +56,7 @@ export default function TimeTable() {
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/time_table_add.php",
+       url:`${apiPrefix}/time_table_add.php`,
        data: formData,
        headers: { "Content-Type": "multipart/form-data"}
       })
@@ -83,7 +85,7 @@ export default function TimeTable() {
   
   useEffect(() => {
     setSpinner(true);
-    axios.get("http://localhost/mohammadi_api/time_table_show_all.php").then((data) => {
+    axios.get(`${apiPrefix}/time_table_show_all.php`).then((data) => {
       console.log("Incoming data from gallery req:", data);
       setViewTimeTable(data.data);
       setSpinner(false);
@@ -102,7 +104,7 @@ export default function TimeTable() {
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/time_table_del.php",
+          url:`${apiPrefix}/time_table_del.php`,
           data:t_id
         })
         console.log("Time-Table delete response : ", res)
@@ -157,7 +159,7 @@ export default function TimeTable() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/time_table_update.php",
+          url: `${apiPrefix}/time_table_update.php`,
           data: updateFormData,
           headers: { "Content-Type": "multipart/form-data"},
           });
@@ -428,7 +430,7 @@ export default function TimeTable() {
                         {tt.date}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        <a href={`http://localhost/mohammadi_api/files/time_table/${tt.time_table_file}`} className="text-indigo-600" target="_blank">Click here to view</a>
+                        <a href={`${apiPrefix}/files/time_table/${tt.time_table_file}`} className="text-indigo-600" target="_blank">Click here to view</a>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {tt.added_on}

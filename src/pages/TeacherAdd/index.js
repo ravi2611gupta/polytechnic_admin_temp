@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 
 export default function AddTeacher() {
 
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
  
   let [isOpen, setIsOpen] = useState(false)
 
@@ -51,7 +52,7 @@ export default function AddTeacher() {
     try{
       const res = await axios({
        method: "post",
-       url:"http://localhost/mohammadi_api/teacher_add.php",
+       url:`${apiPrefix}/teacher_add.php`,
        data: teacherFormData,
        headers: { "Content-Type": "multipart/form-data"}
       })
@@ -90,7 +91,7 @@ export default function AddTeacher() {
   const [viewBranch, setViewBranch] = useState([]);
   
   useEffect(() => {
-    axios.get("http://localhost/mohammadi_api/branch_show.php").then((data) => {
+    axios.get(`${apiPrefix}/branch_show.php`).then((data) => {
       console.log("Incoming data from branch req:", data);
       setViewBranch(data.data);
     });

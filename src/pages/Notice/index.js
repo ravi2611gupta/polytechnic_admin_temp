@@ -12,6 +12,8 @@ import Loader from '../../components/global/Loader'
 export default function Index() {
 
 
+  const apiPrefix = process.env.REACT_APP_API_PREFIX
+ 
 
   // adding notice
   let [isOpen, setIsOpen] = useState(false)
@@ -51,7 +53,7 @@ export default function Index() {
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/noti_add.php",
+          url: `${apiPrefix}/noti_add.php`,
           data: formData,
           headers: { "Content-Type": "multipart/form-data"},
           });
@@ -78,7 +80,7 @@ const [viewNoti, setViewNoti] = useState([])
 
 useEffect(()=>{
   setSpinner(true);
-axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
+  axios.get(`${apiPrefix}/noti_show.php`).then((data)=>{
   // console.table(date);
   setViewNoti(data.data)
   setSpinner(false);
@@ -95,7 +97,7 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
       try{
         const res = await axios({
           method:"post",
-          url:"http://localhost/mohammadi_api/noti_del.php",
+          url:`${apiPrefix}/noti_del.php`,
           data:noti_id
         })
         console.log("Notice delete response : ", res)
@@ -154,7 +156,7 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
       try {
         const res = await axios({
           method: "post",
-          url: "http://localhost/mohammadi_api/noti_update.php",
+          url: `${apiPrefix}/noti_update.php`,
           data: updateFormData,
           headers: { "Content-Type": "multipart/form-data"},
           });
@@ -389,7 +391,7 @@ axios.get("http://localhost/mohammadi_api/noti_show.php").then((data)=>{
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{noti.notice}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{noti.type}</td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><a href={`http://localhost/mohammadi_api/files/notice/${noti.file_name}`} className="text-indigo-600" target='_blank'>Click Here to View</a></td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><a href={`${apiPrefix}/files/notice/${noti.file_name}`} className="text-indigo-600" target='_blank'>Click Here to View</a></td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{noti.date}</td>
                   
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
